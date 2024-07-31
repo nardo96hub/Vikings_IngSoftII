@@ -1,0 +1,504 @@
+<div *ngIf="currentUser && esAdmin; else loggedOut">
+  <div class="grancontenedor">
+    <div class="tab">
+      <!--<button class="tablinks" (click)="abrirTabla($event, 'Usuarios')">Usuarios</button>-->
+      <button class="tablinks" (click)="abrirTabla('Turnos')">Turnos</button>
+      <button *ngIf="!esEmpleado" class="tablinks" (click)="abrirTabla('Mensajes')">Mensajes</button>
+      <button *ngIf="!esEmpleado" class="tablinks" (click)="abrirTabla('Productos')">Productos</button>
+    </div>
+
+    <!-- Contenido tab Turnos -->
+    <div id="Turnos" *ngIf='tablas.turno'>
+      <div>
+        <h2 class="text-center text-light">Lista de Turnos Solicitados</h2>  
+        <button type="button" class="btn btn-danger edicion" (click)="mensajeSolicitado('TS')">{{turnoSol.mensaje}}</button>
+      </div>
+      
+      <div class="container" *ngIf="turnoSol.click">
+        <div class="row row-cols-1 row-cols-md-4 g-3">
+     
+          <div *ngFor="let t of turnosNoDisponibles">
+            <div class="col">
+              <div class="card m-1 shadow bg-secondary border-success h-200">
+                <div class="card-header p-0 bg-light">
+                  <h3 class="card-title">Usuario: {{ t.username }}</h3>
+                </div>
+                <div class="card-body text-success">
+                  <p class="card-text" *ngIf="t.email != 'admin@admin'"><span id="colorcito">Email: </span>{{ t.email }}</p>
+                  <p class="card-text"><span id="colorcito">Fecha del turno: </span><br><span>{{t.dia }}/{{t.mes}} a las {{t.hora}} hs</span></p>
+                  <p class="card-text"><span id="colorcito">Barbero: </span>{{t.barbero}}</p>
+                  
+                </div>
+                <div class="card-footer">
+                  <button (click)="abrirModal(t)" type="button" class="btn btn-primary edicion" data-bs-toggle="modal" data-bs-target="#exampleModal2">
+                    <i class="fas fa-pencil-alt"></i>
+                  </button>
+                  <button (click)="abrirModal(t)" type="button" class="btn btn-danger edicion" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                    <i class="fas fa-trash-alt"></i>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+            
+        </div>
+      </div>
+
+      <div>
+        <h2 class="text-center text-light">Lista de Turnos No Solicitados</h2>  
+        <button type="button" class="btn btn-danger edicion" (click)="mensajeSolicitado('TNS')">{{turnoNoSol.mensaje}}</button>
+      </div>
+      <div class="container" *ngIf="turnoNoSol.click">
+        <div class="row row-cols-1 row-cols-md-5 g-3">
+          <div *ngFor="let t of turnosDisponibles">
+            <div class="col">
+              <div class="card m-1 shadow bg-info border-success h-200">
+                <div class="card-header p-0 bg-light">
+                  <h3 class="card-title">Usuario: {{ t.username }}</h3>
+                </div>
+                <div class="card-body">
+                  <p class="card-text" *ngIf="t.email != 'admin@admin'"><span id="colorcito">Email: </span><span class="text-light">{{ t.email }}</span></p>
+                  <p class="card-text"><span id="colorcito">Fecha del turno: </span><br><span class="text-light">{{t.dia }}/{{t.mes}} a las {{t.hora}} hs</span></p>
+                  <p class="card-text"><span id="colorcito">Barbero: </span><span class="text-light">{{t.barbero}}</span></p>
+                  
+                </div>
+                <div class="card-footer">
+                  <button (click)="abrirModal(t)" type="button" class="btn btn-primary edicion" data-bs-toggle="modal" data-bs-target="#exampleModal2">
+                    <i class="fas fa-pencil-alt"></i>
+                  </button>
+                  <button (click)="abrirModal(t)" type="button" class="btn btn-danger edicion" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                    <i class="fas fa-trash-alt"></i>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+            
+        </div>
+      </div>
+    </div>
+
+    <!-- Contenido tab Mensajes -->
+    <div id="Mensajes" *ngIf='tablas.mensaje'>
+      <div *ngIf="contactos.length != 0">
+        <h2 class="text-center text-light">Lista de Mensajes</h2>
+      </div>      
+              
+      <div class="container">
+        <div class="row row-cols-1 row-cols-md-3 g-3">     
+          <div *ngFor="let c of contactos" class="tablita">
+            <div class="col">
+              <div class="card m-1 shadow bg-secondary border-success h-200">
+                <div class="card-header p-0 bg-light">
+                  <h3 class="card-title">{{c.nombre}} {{c.apellido}}</h3>
+                </div>
+                <div class="card-body text-success">
+                  <p class="card-text"><span id="colorcito">Email: </span>{{c.email}}</p>
+                  <p class="card-text"><span id="colorcito">Telefono: </span>{{c.telefono}}</p>
+                  <p class="card-text"><span id="colorcito">Comentario: </span><br><span>{{c.comentario}}</span></p>              
+                </div>
+                <div class="card-footer">
+                  <button (click)="borrarMensaje(c)" type="button" class="btn btn-danger edicion">
+                    <i class="fas fa-trash-alt"></i>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>            
+        </div>
+      </div>
+    </div>
+
+    <!-- Contenido tab Productos -->
+    <div id="Productos" *ngIf='tablas.producto'>
+      <button type="button" class="btn btn-success agregaProd" (click)="abrirModalCreate()" data-bs-toggle="modal" data-bs-target="#exampleModal7">
+        <i class="fas fa-plus-circle"></i> Crear Producto
+      </button>
+      <button (click)="listaProductos()" type="button" class="btn btn-success agregaProd">
+        <i class="fas fa-list"></i> Listar Productos
+      </button>
+      <button type="button" class="btn btn-success agregaProd" data-bs-toggle="modal" data-bs-target="#exampleModal6">
+        <i class="fas fa-shopping-cart"></i> Carrito de Compra
+      </button>
+      <div *ngIf="productoAgregado" class="alert alert-success" role="alert">
+        Producto Creado Exitosamente
+      </div>
+
+      <div *ngIf="listarProductos">
+        <div class="buscador">
+          <input type="text" id="busca" class="form-control" (keyup)="filtroProducto($event.target.value)" placeholder="Filtro de Productos" >
+        </div> 
+        <div *ngIf="getProductoFiltro().length==0">
+          <h3 class="bg-danger text-info" *ngIf="filtro == ''">No hay productos creados</h3>
+          <h3 class="bg-danger text-info" *ngIf="filtro != ''">No hay productos que cumplan el filtro: {{filtro}}</h3>
+        </div>
+        
+        <div *ngIf="getProductoFiltro().length!=0">
+          <div class="container">
+            <div class="row row-cols-1 row-cols-md-3 g-2">
+              <div *ngFor="let p of getProductoFiltro()">
+                <div class="col">
+                  <div class="card m-1 shadow bg-info border-success h-200">
+                    <div class="card-header p-0 bg-light">
+                      <img [src]="p.imagen" alt=".." class="card-img-top">
+                    </div>
+                    <div class="card-body h-120">
+                      <h2 class="card-title">{{p.nombre}}</h2>
+                      <p class="card-text text-light">{{p.descripcion}}</p>
+                      <p class="card-text text-light">
+                        <span id="colorcito">Precio x U: $</span>{{p.precio}} 
+                      </p>
+                      <p class="card-text text-light">
+                        <span id="colorcito">Coste x U: $</span>{{p.coste}}
+                      </p>
+                      <p class="card-text text-light">
+                        <span id="colorcito">Cantidad: </span>{{p.cantidad}} 
+                      </p>
+                      <p class="card-text text-light">
+                        <span id="colorcito">{{p.proveedor}}</span>
+                      </p>
+                      <p class="card-text text-light">
+                        <span>¿Se puede vender? </span><i *ngIf="p.disponible" class="far fa-solid fa-circle-check" style="color:rgb(7, 226, 7);"></i><i *ngIf="!p.disponible" class="far fa-solid fa-circle-xmark" style="color:rgb(252, 54, 54);"></i>
+                      </p>
+                    </div>
+                    <div class="card-footer text-center">
+                      <button (click)="abrirModalProducto(p,'E')" type="button" class="btn btn-primary edicion" data-bs-toggle="modal" data-bs-target="#exampleModal4">
+                        <i class="fas fa-pencil-alt"></i>
+                      </button>
+                      <button (click)="abrirModalProducto(p,'B')" type="button" class="btn btn-danger edicion" data-bs-toggle="modal" data-bs-target="#exampleModal3">
+                        <i class="fas fa-trash-alt"></i>
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            
+
+            </div>
+          </div>
+        </div>
+        
+
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<ng-template #loggedOut>
+  <div class="alert alert-danger" role="alert">
+    <h4 class="alert-heading" id="denegado">Restringido!</h4>
+    <p id="denegado">No tiene los privilegios requeridos para acceder a esta sección de la página. Este segmento es de uso exclusivo para el personal responsable del mantenimiento de la misma</p>
+    <hr>
+    <p id="denegado" class="mb-0">Sección denegada para usuarios sin autorización</p>
+  </div>
+</ng-template>
+
+<!-- Modals -->
+
+<!-- Modal Borrar Turno-->
+<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">¿Desea cancelar este turno?</h5>
+        <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <!--
+      <div class="modal-body">
+        
+      </div>
+      -->
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+        <button (click)="borrarTurno()" type="button" class="btn btn-primary" data-bs-dismiss="modal">Confirmar</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal Edicion Turno-->
+<div class="modal fade" id="exampleModal2" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">¿Desea editar este turno?</h5>
+        <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <label for="nombreUsuario">Nombre de Usuario:</label>
+        <input type="text" class="form-control" id="nombreUsuario" #nombreUsuarioInput>
+
+        <label for="email">Email:</label>
+        <input type="email" class="form-control" id="email" #emailInput>
+
+        <label for="turnoDisponible">Turno Disponible:</label>
+        <input type="checkbox" id="turnoDisponible" #turnoDisponibleInput>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+        <button (click)="editarTurno(nombreUsuarioInput.value, emailInput.value, turnoDisponibleInput.checked)" type="button" class="btn btn-primary" data-dismiss="modal">Confirmar</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal Borrar Producto-->
+<div class="modal fade" id="exampleModal3" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">¿Desea borrar este producto?</h5>
+        <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <!--
+      <div class="modal-body">
+        
+      </div>
+      -->
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+        <button (click)="borrarProducto()" type="button" class="btn btn-primary" data-bs-dismiss="modal">Confirmar</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal Edicion Producto-->
+<div class="modal fade" id="exampleModal4" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <div *ngIf="modalEdit">
+          <h5 class="modal-title" id="exampleModalLabel">¿Desea editar este producto?</h5>
+        </div>
+
+        <div *ngIf="!modalEdit">
+          <div *ngIf="!valFormEd.nomReq && !valFormEd.descReq && !valFormEd.preReq && !valFormEd.cosReq && !valFormEd.cantReq && !valFormEd.proReq && !valFormEd.preCosEdi && !valFormEd.preNeg && !valFormEd.cosNeg && !valFormEd.cantNeg">
+            <h5 class="modal-title" id="exampleModalLabelEdit2">¿Esta seguro de actualizar el producto?</h5>
+          </div>
+          <div *ngIf="valFormEd.nomReq || valFormEd.descReq || valFormEd.preReq || valFormEd.cosReq || valFormEd.cantReq || valFormEd.proReq || valFormEd.preCosEdi || valFormEd.preNeg || valFormEd.cosNeg || valFormEd.cantNeg">
+            <h5 class="modal-title" id="exampleModalLabelEdit2">Errores en la carga del formulario</h5>
+          </div>
+        </div>
+    
+        <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+
+      </div>
+
+      <div class="modal-body">
+        
+        <div *ngIf="modalEdit">
+          <form [formGroup]="formEdit" (ngSubmit)="validarEditar(formEdit.value)" id="editForm">
+            <div class="form-group">
+              <label for="nombre">Nombre del Producto</label>
+              <input type="text" class="form-control" id="nombre" formControlName="nombre">
+            </div>
+            <div class="form-group">
+              <label for="descripcion">Descripción</label>
+              <input type="text" class="form-control" id="descripcion" formControlName="descripcion">
+            </div>
+            <div class="form-group">
+              <label for="precio">Precio</label>
+              <input type="number" class="form-control" id="precio" formControlName="precio">
+            </div>
+            <div class="form-group">
+              <label for="coste">Coste</label>
+              <input type="number" class="form-control" id="coste" formControlName="coste">
+            </div>
+            <div class="form-group">
+              <label for="cantidad">Cantidad</label>
+              <input type="number" class="form-control" id="cantidad" formControlName="cantidad">
+            </div>
+            <div class="form-group">
+              <label for="proveedor">Proveedor</label>
+              <select formControlName="proveedor" class="form-control" id="exampleFormControlSelect11">
+                <option selected>----</option>
+                <option value="Proveedor Bruno">Proveedor Bruno</option>
+                <option value="Proveedor Diego">Proveedor Diego</option>
+                <option value="Proveedor Luciano">Proveedor Luciano</option>
+              </select>
+            </div>
+    
+            <div class="form-group">
+              <div class="form-check">
+                <label class="form-check-label" for="dispVenta">
+                  ¿Disponible a la venta?
+                </label>
+                <input class="form-check-input" type="checkbox" id="dispVenta" formControlName="disponible">
+              </div>
+            </div>
+            <br>
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Salir</button>
+            <button (click)="validarEditar(formEdit.value)" type="button" class="btn btn-primary">Actualizar</button> <!--  data-bs-target="#exampleModalconfEdi" data-bs-dismiss="modal" data-bs-toggle="modal"  -->
+          </form> 
+
+        </div>
+        <div *ngIf="!modalEdit">
+          <div *ngIf="valFormEd.nomReq || valFormEd.descReq || valFormEd.preReq || valFormEd.cosReq || valFormEd.cantReq || valFormEd.proReq || valFormEd.preCosEdi || valFormEd.preNeg || valFormEd.cosNeg || valFormEd.cantNeg">
+            <p *ngIf="valFormEd.nomReq">Completa el campo 'Nombre'</p>
+            <p *ngIf="valFormEd.descReq">Completa el campo 'Descripcion'</p>
+            <p *ngIf="valFormEd.preReq">Completa el campo 'Precio'</p>
+            <p *ngIf="valFormEd.cosReq">Completa el campo 'Coste'</p>
+            <p *ngIf="valFormEd.cantReq">Completa el campo 'Cantidad'</p>
+            <p *ngIf="valFormEd.proReq">Completa el campo 'Proveedor'</p>
+            <p *ngIf="valFormEd.preCosEdi">El campo 'Precio Unitario' tiene que ser mayor al 'Coste Unitario'</p>
+            <p *ngIf="valFormEd.preNeg">El campo 'Precio Unitario' tiene que ser mayor a 0</p>
+            <p *ngIf="valFormEd.cosNeg">El campo 'Coste Unitario' tiene que ser mayor a 0</p>
+            <p *ngIf="valFormEd.cantNeg">El campo 'Cantidad' tiene que ser mayor a 0</p>
+
+            <button type="button" class="btn btn-secondary" (click)="cerrarModal('E')">Cerrar</button>
+          </div>
+
+
+          <div *ngIf="!valFormEd.nomReq && !valFormEd.descReq && !valFormEd.preReq && !valFormEd.cosReq && !valFormEd.cantReq && !valFormEd.proReq && !valFormEd.preCosEdi && !valFormEd.preNeg && !valFormEd.cosNeg && !valFormEd.cantNeg">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button> 
+            <button (click)="editarProd(formEdit.value)" type="submit" form="editForm" class="btn btn-primary" data-bs-dismiss="modal">Confirmar</button>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal Agregar Producto-->
+<div class="modal fade" id="exampleModal7" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <div *ngIf="modalCreate">
+          <h5 class="modal-title" id="exampleModalLabel">¿Desea agregar este producto?</h5>
+        </div>
+        <div *ngIf="!modalCreate">
+          <div *ngIf="!valFormCr.nomReq && !valFormCr.descReq && !valFormCr.preReq && !valFormCr.cosReq && !valFormCr.cantReq && !valFormCr.proReq && !valFormCr.preCosEdi && !valFormCr.preNeg && !valFormCr.cosNeg && !valFormCr.cantNeg">
+            <h5 class="modal-title" id="exampleModalLabel">¿Esta seguro de crear el producto?</h5>
+          </div>
+          <div *ngIf="valFormCr.nomReq || valFormCr.descReq || valFormCr.preReq || valFormCr.cosReq || valFormCr.cantReq || valFormCr.proReq || valFormCr.preCosEdi || valFormCr.preNeg || valFormCr.cosNeg || valFormCr.cantNeg">
+            <h5 class="modal-title" id="exampleModalLabel">Ocurrio un error</h5>
+            
+          </div>
+          
+        </div>
+
+        <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+
+      </div>
+      <div class="modal-body">
+
+        <div *ngIf="modalCreate">
+          <form [formGroup]="form">
+            <div class="form-group">
+              <label for="nombre">Nombre del Producto</label>
+              <input type="text" class="form-control" id="nombre" formControlName="nombre">
+            </div>
+            <div class="form-group">
+              <label for="descripcion">Descripción</label>
+              <input type="text" class="form-control" id="descripcion" formControlName="descripcion">
+            </div>
+            <div class="form-group">
+              <label for="precio">Precio</label>
+              <input type="number" class="form-control" id="precio" formControlName="precio">
+            </div>
+            <div class="form-group">
+              <label for="coste">Coste</label>
+              <input type="number" class="form-control" id="coste" formControlName="coste">
+            </div>
+            <div class="form-group">
+              <label for="cantidad">Cantidad</label>
+              <input type="number" class="form-control" id="cantidad" formControlName="cantidad">
+            </div>
+            <div class="form-group">
+              <label for="proveedor">Proveedor</label>
+              <select formControlName="proveedor" class="form-control" id="exampleFormControlSelect11">
+                <option selected>----</option>
+                <option value="Proveedor Bruno">Proveedor Bruno</option>
+                <option value="Proveedor Diego">Proveedor Diego</option>
+                <option value="Proveedor Luciano">Proveedor Luciano</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <div class="form-check">
+                <label class="form-check-label" for="dispVenta">
+                  ¿Disponible a la venta?
+                </label>
+                <input class="form-check-input" type="checkbox" id="dispVenta" checked formControlName="disponible">
+              </div>
+            </div>
+            
+            <br>
+            <button (click)="validarFormCreate(form.value)" type="button" class="btn btn-primary">Crear Producto</button>
+          </form> 
+         
+        </div>
+
+        <div *ngIf="!modalCreate">
+          <div *ngIf="valFormCr.nomReq || valFormCr.descReq || valFormCr.preReq || valFormCr.cosReq || valFormCr.cantReq || valFormCr.proReq || valFormCr.preCosEdi || valFormCr.preNeg || valFormCr.cosNeg || valFormCr.cantNeg">
+            <p *ngIf="valFormCr.nomReq">Completa el campo 'Nombre'</p>
+            <p *ngIf="valFormCr.descReq">Completa el campo 'Descripcion'</p>
+            <p *ngIf="valFormCr.preReq">Completa el campo 'Precio'</p>
+            <p *ngIf="valFormCr.cosReq">Completa el campo 'Coste'</p>
+            <p *ngIf="valFormCr.cantReq">Completa el campo 'Cantidad'</p>
+            <p *ngIf="valFormCr.proReq">Completa el campo 'Proveedor'</p>
+            <p *ngIf="valFormCr.preCosEdi">El campo 'Precio Unitario' tiene que ser mayor al 'Coste Unitario'</p>
+            <p *ngIf="valFormCr.preNeg">El campo 'Precio Unitario' tiene que ser mayor a 0</p>
+            <p *ngIf="valFormCr.cosNeg">El campo 'Coste Unitario' tiene que ser mayor a 0</p>
+            <p *ngIf="valFormCr.cantNeg">El campo 'Cantidad' tiene que ser mayor a 0</p>
+
+          </div>
+          
+        </div>
+
+      </div>
+      <div  class="modal-footer">
+        <div *ngIf="modalCreate">
+          <button  class="btn btn-secondary" data-bs-dismiss="modal" (click)="salir()">Salir</button>
+          <button (click)="limpiarInput()" type="button" class="btn btn-primary">Limpiar</button>
+        </div>
+        <div *ngIf="!modalCreate">
+          <div *ngIf="!valFormCr.nomReq && !valFormCr.descReq && !valFormCr.preReq && !valFormCr.cosReq && !valFormCr.cantReq && !valFormCr.proReq && !valFormCr.preCosEdi && !valFormCr.preNeg && !valFormCr.cosNeg && !valFormCr.cantNeg">
+
+            <button type="button" class="btn btn-secondary" (click)="limpiarInput()" data-bs-dismiss="modal">Cancelar</button>
+            <button type="button" class="btn btn-primary" (click)="agregarProducto(form.value)" data-bs-dismiss="modal">Confirmar</button>
+          </div>
+
+          <div *ngIf="valFormCr.nomReq || valFormCr.descReq || valFormCr.preReq || valFormCr.cosReq || valFormCr.cantReq || valFormCr.proReq || valFormCr.preCosEdi || valFormCr.preNeg || valFormCr.cosNeg || valFormCr.cantNeg">
+            <button type="button" class="btn btn-secondary" (click)="cerrarModal('C')">Cerrar</button>
+          </div>
+        </div>
+        
+      </div>
+    </div>
+  </div>
+</div>        
+     
+<!-- Modal Carrito-->
+<div class="modal fade" id="exampleModal6" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Carrito de compras</h5>
+        <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        En desarrollo, no entra en esta primera iteracion del proyecto de Ingenieria de Software II.
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+        <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Confirmar</button>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,120 @@
+<div class="jumbotron jumbotron-fluid">
+  <div class="container text-info">
+    <h1 class="display-4">Nuestros productos</h1>
+    <p>
+      Vikings Barber Shop fabrica y distribuye en todo el pais miles de artículos para
+      profesionales de la industria de la peluquería, belleza y cosmética . Llevamos más
+      de 75 años trabajando para proporcionar productos de alta calidad a profesionales
+      de la industria. Nuestras propias marcas son: InSight (peluquería), Osis (Estética),
+      De Preal (cosmética) y Primont (Barber). Somos la empresa líder en Rosario en nuestro sector
+      y exportamos a más de 10 provincias en todo el pais. Tenemos una extensa red de distribución
+      tanto a nivel nacional como internacional. Como empresa, Vikings Barber Shop es pionera en
+      Argentina en la investigación, diseño y fabricación de accesorios, herramientas, peluquería
+      y estética.
+    </p>
+  </div>
+</div>
+<div class="container">
+  <button (click)="listaProductos()" class="btn-long">Conoce todos nuestros productos aquí</button>
+</div>
+<div class="buscador" *ngIf="listarProductos">
+  <input id="busca" type="text" (keyup)="filtroTabla($event.target.value)" placeholder="Filtra por el nombre de producto que estes buscando">
+</div>
+<div *ngIf="productosDisponibles">
+  <div *ngFor="let p of productos" class="tablita" [style.display]="(ocultarProducto(p.disponible) && p.nombre.toLowerCase().includes(filtro.toLowerCase())) ? 'block' : 'none'">
+    <p id="colorcito">Nombre: <span id="campos">{{ p.nombre }}</span></p>
+    <p id="colorcito">Descripcion: </p><p id="campos">{{ p.descripcion }}</p>
+    <p id="colorcito">Precio: <span id="campos">${{ p.precio }}</span></p>
+    <div class="container">
+      <button type="button" class="btn btn-primary carritocompra" data-bs-toggle="modal" data-bs-target="#exampleModalCarrito">
+        <i class="fas fa-shopping-cart"></i><span>Agregar a Carrito</span>
+      </button>
+    </div>
+  </div>
+</div>
+<div *ngIf="!productosDisponibles" class="alert alert-warning" role="alert">
+  No se encontraron productos disponibles con este filtro.
+</div>
+<div class="grancontenedor">
+  <div class="tab">
+      <button class="tablinks" (click)="abrirTabla($event, 'Primont')">Primont</button>
+      <button class="tablinks" (click)="abrirTabla($event, 'DePreal')">De Preal</button>
+      <button class="tablinks" (click)="abrirTabla($event, 'InSight')">InSight</button>
+  </div>
+
+  <div id="Primont" class="tabcontent">
+
+    <div class="container" *ngFor="let pri of primont">
+      <div *ngFor="let p of pri" class="card-group">
+        <div class="card text-center mr-3 mb-3" style="width: 25rem; height: 40rem;">
+          <img [src]="p.imagen" class="card-img-top" alt="...">
+          <div class="card-body">
+            <h3 class="h3 card-title">{{p.nombre}}</h3>
+            <p class="card-text">{{p.descripcion}}</p>
+          </div>
+          <div class="card-footer bg-warning text-center">
+            <small class="text-muted">${{p.precio}}</small>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="DePreal" class="tabcontent">
+    <div class="container" *ngFor="let de of depreal">
+      <div class="card-group" *ngFor="let d of de">
+        <div class="card text-center mr-3 mb-3" style="width: 25rem; height: 40rem;">
+          <img [src]="d.imagen" class="card-img-top" alt="...">
+          <div class="card-body">
+            <h3 class="h3 card-title">{{d.nombre}}</h3>
+            <p class="card-text">{{d.descripcion}}</p>
+          </div>
+          <div class="card-footer bg-warning text-center">
+            <small class="text-muted">${{d.precio}}</small>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="InSight" class="tabcontent">
+    <div class="container" *ngFor="let ins of insight">
+      <div class="card-group" *ngFor="let i of ins">
+        <div class="card text-center mr-3 mb-3" style="width: 25rem; height: 40rem;">
+          <img [src]="i.imagen" class="card-img-top" alt="...">
+          <div class="card-body">
+            <h3 class="h3 card-title">{{i.nombre}}</h3>
+            <p class="card-text">{{i.descripcion}}</p>
+          </div>
+          <div class="card-footer bg-warning text-center">
+            <small class="text-muted">${{i.precio}}</small>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+</div>
+<!-- Modal Carrito-->
+<div class="modal fade" id="exampleModalCarrito" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Carrito de compras</h5>
+        <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        En desarrollo, no entra en esta primera iteracion del proyecto de Ingenieria de Software II.
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Cerrar</button>
+      </div>
+    </div>
+  </div>
+</div>
+<ng-template #noProductosEncontrados>
+  <div class="alert alert-warning" role="alert">
+    No se encontraron productos disponibles con este filtro.
+  </div>
+</ng-template>
