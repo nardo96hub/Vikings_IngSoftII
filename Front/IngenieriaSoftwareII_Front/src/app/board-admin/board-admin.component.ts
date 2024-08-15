@@ -82,18 +82,18 @@ export class BoardAdminComponent implements OnInit {
     this.currentUser = this.token.getUser();
     if(this.currentUser!=null){
       this.privilegios = this.currentUser.roles;
+      console.log("Privilegios: ",this.privilegios)
       this.esAdmin = (this.privilegios.includes('ROLE_ADMIN') || this.privilegios.includes('ROLE_EMPLEADO'));
       this.esEmpleado = this.privilegios.includes('ROLE_EMPLEADO');
     }
 
-    
-
-    this.userService.getAll().subscribe((turnos:Turno[])=>{
+     this.userService.getAll().subscribe((turnos:Turno[])=>{
       console.log(turnos);
       
       this.turnos = turnos;
       this.turnosDisponibles = turnos.filter(t=>t.disponible)
       this.turnosNoDisponibles = turnos.filter(t=>t.disponible==false)
+      this.turnosNoDisponibles = this.turnosNoDisponibles.filter(t=>!t.username.includes('admin'))
      
     })
 
@@ -106,6 +106,8 @@ export class BoardAdminComponent implements OnInit {
       console.log(productos);
       
     })
+
+    
 
     this.form = this.fb.group({
       nombre: [''],
@@ -129,6 +131,8 @@ export class BoardAdminComponent implements OnInit {
 
     );
   }
+
+
 
   precioValido(control: AbstractControl): { [key: string]: any } | null {
     const precio = control.value;

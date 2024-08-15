@@ -64,6 +64,10 @@ const rutas:Routes = [
     component:RegistroComponent
   },
   {
+    path:'registro/login',
+    component:LoginComponent
+  },
+  {
     path:'admin',
     component:BoardAdminComponent
   },

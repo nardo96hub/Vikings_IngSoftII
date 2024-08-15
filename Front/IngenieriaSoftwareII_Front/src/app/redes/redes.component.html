@@ -6,12 +6,12 @@
   <div class="redes"><a href="https://wa.me/5493412848850?text=Hola,%20necesito%20hacer%20una%20consulta%20Vikings%20Barber%20Shop"><i class="fab fa-whatsapp" style="font-size:24px;color:white"></i></a></div>
   <div class="redes"><a href="#" data-bs-toggle="modal" data-bs-target="#exampleModalOscuro"><i class="fas fa-moon" style="font-size:24px;color:#EAE6CA"></i></a></div>
   <!--<a id="inicia" routerLink="login">Iniciar Sesion</a>-->
-  <div id="inicia" routerLinkActive="active"><span *ngIf="showAdminBoard"><a id="inicias" routerLink="admin"><i class="fas fa-briefcase" style="color: #AD7703;"></i> Gestión</a></span></div>
-  <div id="inicia" *ngIf="!isLoggedIn">
-    <span><a id="inicia" routerLink="registro">Registrarse</a></span>
-    <span><a id="inicias" routerLink="login">Iniciar Sesion</a></span>
+  <div id="inicia" routerLinkActive="active"><span *ngIf="showAdminBoard"><a id="inicias" routerLink="/admin"><i class="fas fa-briefcase" style="color: #AD7703;"></i> Gestión</a></span></div>
+  <div id="inicia" *ngIf="islogueado()==false">
+    <span><a id="inicia" routerLink="/registro">Registrarse</a></span>
+    <span><a id="inicias" routerLink="/login">Iniciar Sesion</a></span>
   </div>
-  <div id="inicia" *ngIf="isLoggedIn">
+  <div id="inicia" *ngIf="islogueado()">
     <a id="inicia" (click)="clickear()">
       <i class="fas fa-user" style="color:#0B15AD;"></i>
       <span> {{username}} </span>
@@ -21,11 +21,11 @@
     </span>
   </div>
 </div>
-<div class="pro" *ngIf="isLoggedIn && clickeado">
+<div class="pro" *ngIf="islogueado() && clickeado">
   <ul>
-    <li *ngIf="isLoggedIn"><a routerLink="profile" (click)="clickear()"><i class="fas fa-user" style="color:#01E905;"></i><span class="pro2">Perfil</span></a></li>
-    <li *ngIf="isLoggedIn"><a routerLink="board-user" (click)="clickear()"><i class="fas fa-ticket-alt fa-lg" style="color:#01E9DB;"></i><span class="pro2">Tickets</span></a></li>
-    <li *ngIf="isLoggedIn"><a href (click)="logout()"><i class="fas fa-sign-out-alt fa-lg" style="color:#DD0202;"></i><span class="pro2">Salir</span></a></li>
+    <li><a routerLink="/profile" (click)="clickear()"><i class="fas fa-user" style="color:#01E905;"></i><span class="pro2">Perfil</span></a></li>
+    <li><a routerLink="/board-user" (click)="clickear()"><i class="fas fa-ticket-alt fa-lg" style="color:#01E9DB;"></i><span class="pro2">Tickets</span></a></li>
+    <li><a href (click)="logout()"><i class="fas fa-sign-out-alt fa-lg" style="color:#DD0202;"></i><span class="pro2">Salir</span></a></li>
   </ul>
 </div>
 <!-- Modal Modo Oscuro-->

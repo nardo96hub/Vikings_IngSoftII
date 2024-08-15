@@ -72,7 +72,7 @@ public class TetServiceImpl implements TestService {
             usuarios.put("admin","admin@admin");
             usuarios.put("user","user@user");
 
-            //List<Boolean> disp = Arrays.asList(new Boolean[]{true,false});
+            List<Boolean> disp = Arrays.asList(new Boolean[]{true,false});
             //Persona user = repoUser.findByEmail(usuarios.get(numRandom(1))).get();
 
 
@@ -101,13 +101,19 @@ public class TetServiceImpl implements TestService {
                             else textm = "30";
 
                             Turno turno;
-                            String usuario = userName.get(numRandom(1));
+                            String usuario = userName.get(numRandom(0));
+
+                            turno = new Turno(usuario,usuarios.get(usuario),barberos.get(numRandom(barberos.size()-1)),dia,mes,texth+":"+textm,disp.get(numRandom(1)));
+
+                            /*
 
                             if (usuario.equals("admin")){
                                 turno = new Turno(usuario,usuarios.get(usuario),barberos.get(numRandom(barberos.size()-1)),dia,mes,texth+":"+textm,true);
                             } else {
                                 turno = new Turno(usuario,usuarios.get(usuario),barberos.get(numRandom(barberos.size()-1)),dia,mes,texth+":"+textm,false);
                             }
+                             */
+
 
                             repoTurno.save(turno);
                         }

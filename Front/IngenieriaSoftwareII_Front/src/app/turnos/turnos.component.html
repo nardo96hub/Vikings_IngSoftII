@@ -98,14 +98,14 @@
         <p class="campos"><span id="colorcito">Fecha del turno</span></p>
         <p class="campos"><span id="colorcito">Hora del turno</span></p>
         <p class="campos"><span id="colorcito">Barbero</span></p>
-        <p class="campos" *ngIf="currentUser"><span id="colorcito">Solicitar Turno</span></p>
+        <p class="campos" *ngIf="currentUser && currentUser.roles.includes('ROLE_USER')"><span id="colorcito">Solicitar Turno</span></p>
       </div>
       <div  *ngFor="let t of getTurnosFiltros(turnos)">
         <div *ngIf="turnoDisponible(t.disponible,t.dia,t.mes,t.barbero)" class="turno">
           <p class="campos" ><span id="colorcito"></span>{{t.dia}}/{{t.mes}}</p>
           <p class="campos"><span id="colorcito"></span>{{t.hora}}Hs</p>
           <p class="campos"><span id="colorcito"></span>{{t.barbero}}</p>
-          <p class="campos" *ngIf="currentUser"><button (click)="abrirModal(t)" id="reserva" type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">Solicitar Turno</button></p>
+          <p class="campos" *ngIf="currentUser && currentUser.roles.includes('ROLE_USER')"><button (click)="abrirModal(t)" id="reserva" type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">Solicitar Turno</button></p>
           
         </div>
 

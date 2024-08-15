@@ -25,7 +25,12 @@ export class BoardUserComponent implements OnInit {
   }
 
   turnoDisponible(disp:boolean, user:string):boolean{
-    return (this.currentUser.username == user && this.currentUser.username != 'admin' && !disp);
+    return (this.currentUser.username == user && !this.currentUser.username.includes('admin') && !disp);
+  }
+  isSolicitoTurno(turnos:Turno[]):boolean{
+    let turno = turnos.filter(t=>t.disponible==false && t.username==this.currentUser.username && !this.currentUser.username.includes('admin'))
+    
+    return turno.length>0
   }
 
   abrirModal(turno:Turno){

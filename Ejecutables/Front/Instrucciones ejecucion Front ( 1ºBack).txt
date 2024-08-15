@@ -1,0 +1,20 @@
+Sugerencias:
+   - Para ver si esta en uso los puertos puede ejecutar:  
+	- netstat -ano| findstr "4200"
+	 EN CASO DE NO FUNCIONAR buscar alguna combinacion de netstat -ano
+
+	La informacion que muestra corresponde a:
+		Proto - Direccion local - Direccion remota - Estado - Pid	
+
+   - Kill puerto:
+      - Al ejecutar netstat conseguira un codigo Pid y tendra que ejecutar:
+	-  taskkill /F /PID nºPid
+
+  -Tener instalado http-server:
+	- npm install -g http-server
+
+1_ Ejecutar cd proyecto-angular
+2_ Ejecutar  http-server -p 4200 (Si hay conflico puerto puede cambie o kill puerto)
+3_ Copiar cualquiera de las url que le genera
+4_ Para detener servidor Control+C o hacer kill puerto
+
